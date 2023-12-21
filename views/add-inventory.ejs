@@ -1,0 +1,49 @@
+<!-- Your EJS template for the add inventory form -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Add your head content here -->
+    <title>Add Inventory</title>
+</head>
+
+<body>
+    <h1>Add New Inventory</h1>
+
+    <% if (messages.success) { %>
+        <div class="alert alert-success">
+            <%= messages.success %>
+        </div>
+        <% } %>
+
+            <% if (messages.error) { %>
+                <div class="alert alert-danger">
+                    <%= messages.error %>
+                </div>
+                <% } %>
+
+                    <form action="/add-inventory" method="post">
+
+                        <label for="medication_name">Medication Name:</label>
+                        <input type="text" id="medication_name" name="medication_name" required>
+
+                        <label for="medication_strength">Strength:</label>
+                        <input type="text" id="medication_strength" name="medication_strength" required>
+
+                        <label for="control_class">Control Class:</label>
+                        <input type="text" id="control_class" name="control_class" required>
+
+                        <label for="current_inventory">Current Inventory:</label>
+                        <input type="text" id="current_inventory" name="current_inventory" required>
+
+                        <label for="threshold">Threshold:</label>
+                        <input type="text" id="threshold" name="threshold" required>
+
+                        <label for="last_used">Last Used:</label>
+                        <input type="text" id="last_used" name="last_used" required>
+
+                        <button type="submit">Add Inventory</button>
+                    </form>
+</body>
+
+</html>
