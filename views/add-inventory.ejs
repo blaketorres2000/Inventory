@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Inventory</title>
+    <link rel="stylesheet" href="/css/styles.css" media="screen">
+</head>
+
+<body>
+
+    <header class="add_inventory_header">
+        <h1>Pharmacy Inventory Management System</h1>
+        <nav class="add_inventory_nav">
+            <a href="/">Home</a>
+            <a href="/add-inventory">Add New Inventory</a>
+            <a href="/inventory-usage">Inventory Usage</a>
+            <a href="/incoming-inventory">Incoming Inventory</a>
+            <a href="/reports">Reports</a>
+        </nav>
+    </header>
+
+    <main class="add_inventory_main">
+
+        <% if (messages.success) { %>
+            <div class="alert alert-success">
+                <%= messages.success %>
+            </div>
+        <% } %>
+
+        <% if (messages.error) { %>
+            <div class="alert alert-danger">
+                <%= messages.error %>
+            </div>
+        <% } %>
+
+        <form class="all-forms" action="/add-inventory" method="post">
+            <h1>Add New Inventory</h1>
+
+            <label class="add_name" for="medication_name">Medication Name:</label>
+            <input type="text" id="medication_name" name="medication_name" placeholder="Enter Medication Name" required>
+
+            <label class="add_strength" for="medication_strength">Strength:</label>
+            <input type="text" id="medication_strength" name="medication_strength" placeholder="Add unit of measure after strength"required>
+
+            <label class="add_class" for="control_class">Control Class:</label>
+            <input type="text" id="control_class" name="control_class" placeholder="Enter only a number for the control class" required>
+
+            <label class="add_stock" for="current_inventory">Current Inventory:</label>
+            <input type="text" id="current_inventory" name="current_inventory" placeholder="Enter only a number for inventory" required>
+
+            <label class="add_unit" for="unit">Unit:</label>
+            <input type="text" id="unit" name="unit" placeholder="tablet, capsule, liquid, etc" required>
+
+            <label class="add_threshold" for="threshold">Threshold:</label>
+            <input type="text" id="threshold" name="threshold" placeholder="What is the minimum quantity wanted on hand" required>
+
+            <label class="add_last" for="last_used">Last Used:</label>
+            <input type="text" id="last_used" name="last_used" placeholder="Enter date as mm/dd/yyyy" required>
+
+            <button type="submit">Add Inventory</button>
+        </form>
+    </main>
+</body>
+
+</html>

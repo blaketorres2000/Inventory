@@ -1,0 +1,137 @@
+/*************************************************
+ * Change Box Model to Border Box
+ ************************************************/
+ *,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+/*************************************************
+ * Body Styles
+ ************************************************/
+
+body {
+    max-width: 1600px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+}
+
+/*************************************************
+ * Header Styles
+ ************************************************/
+
+header {
+    background-color: #7a8eff;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+header nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+header nav a {
+    color: black;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+header nav a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/*************************************************
+ * General Form Styles
+ ************************************************/
+
+.all-forms {
+    background-color: #c6c5c5;
+    margin: 0 auto;
+    width: 50%;
+    padding: 1em;
+    border: 1px solid #CCC;
+    border-radius: 1em;
+    margin-top: 75px;
+}
+
+.all-forms label {
+    display: block;
+    margin-top: 1em;
+    font-size: 20px;
+    text-align: left;
+}
+
+.all-forms input[type="text"] {
+    width: 100%;
+    padding: 0.5em;
+    font-size: 20px;
+    border: 1px solid #CCC;
+    border-radius: 0.5em;
+}
+
+.all-forms input::placeholder {
+    color: #CCC;
+}
+
+button {
+    margin-top: 1em;
+    padding: 0.5em;
+    font-size: 16px;
+    border: 1px solid #CCC;
+    border-radius: 0.5em;
+    background-color: #7a8eff;
+    box-shadow: 4px 4px 4px black;
+}
+
+button:hover {
+    box-shadow: none;
+    cursor: pointer;
+}
+
+/*************************************************
+ * Add New Inventory Styles
+ ************************************************/
+
+.add_inventory_main h1 {
+    font-size: 30px;
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+
+/*************************************************
+ * Inventory Usage Styles
+ ************************************************/
+
+.usage-search-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.usage-search-container .usage-page-search {
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+#medication_select {
+    width: 100%;
+    padding: 0.5em;
+    font-size: 20px;
+    border: 1px solid #CCC;
+    border-radius: 0.5em;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    text-align: center;
+}
+

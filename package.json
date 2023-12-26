@@ -1,0 +1,24 @@
+{
+  "name": "inventory",
+  "version": "1.0.0",
+  "description": "Manage inventory for pharmacy",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blaketorres2000/Inventory.git"
+  },
+  "author": "Blake Torres",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blaketorres2000/Inventory/issues"
+  },
+  "homepage": "https://github.com/blaketorres2000/Inventory#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "pg-promise": "^11.5.4"
+  }
+}

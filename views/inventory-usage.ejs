@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Record Inventory Usage</title>
+    <link rel="stylesheet" href="/css/styles.css" media="screen">
+    <script>
+        function searchMedications() {
+            const searchTerm = document.getElementById("medication_search").value;
+            window.location.href = `/inventory-usage?medication_search=${searchTerm}`;
+        }
+    </script>
+</head>
+
+<body>
+
+    <header class="add_inventory_header">
+        <h1>Pharmacy Inventory Management System</h1>
+        <nav class="add_inventory_nav">
+            <a href="/">Home</a>
+            <a href="/add-inventory">Add New Inventory</a>
+            <a href="/inventory-usage">Inventory Usage</a>
+            <a href="/incoming-inventory">Incoming Inventory</a>
+            <a href="/reports">Reports</a>
+        </nav>
+    </header>
+
+    <main class="inventory_usage_main">
+
+        <% if (messages.success) { %>
+            <div class="alert alert-success">
+                <%= messages.success %>
+            </div>
+            <% } %>
+
+                <% if (messages.error) { %>
+                    <div class="alert alert-danger">
+                        <%= messages.error %>
+                    </div>
+                    <% } %>
+
+                        <form class="all-forms" action="/inventory-usage" method="post">
+                            <h1>Record Inventory Usage</h1>
+
+                            <!-- Add the button and input to your form -->
+                            <label class="search_label" for="medication_search">Search Medication:</label>
+                            <div class="usage-search-container">
+                            <input type="text" id="medication_search" name="medication_search"
+                                placeholder="Type medication name">
+                            <button class="usage-page-search" type="button" onclick="searchMedications()">Search</button>
+                            </div>
+
+                            <!-- Display matching medications as options -->
+                            <select id="medication_select" name="medication_id">
+                                <% medications.forEach((medication)=> { %>
+                                    <option value="<%= medication.medication_id %>">
+                                        <%= medication.medication_name %> - <%= medication.medication_strength %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+
+                            <label class="total_units_label" for="total_units">Total Units Used:</label>
+                            <input type="text" id="total_units" name="total_units" placeholder="Enter total units used"
+                                required>
+
+                            <label class="total_scripts_label" for="total_scripts">Total Scripts Used:</label>
+                            <input type="text" id="total_scripts" name="total_scripts"
+                                placeholder="Enter total scripts used" required>
+
+                            <label class="date_label" for="usage_date">Date:</label>
+                            <input type="text" id="usage_date" name="usage_date" value="<%= currentDate %>" required>
+
+                            <button type="submit">Record Usage</button>
+                        </form>
+    </main>
+</body>
+
+</html>
