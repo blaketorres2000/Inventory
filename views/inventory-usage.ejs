@@ -48,16 +48,19 @@
                             <!-- Add the button and input to your form -->
                             <label class="search_label" for="medication_search">Search Medication:</label>
                             <div class="usage-search-container">
-                            <input type="text" id="medication_search" name="medication_search"
-                                placeholder="Type medication name">
-                            <button class="usage-page-search" type="button" onclick="searchMedications()">Search</button>
+                                <input type="text" id="medication_search" name="medication_search"
+                                    placeholder="Type medication name">
+                                <button class="usage-page-search" type="button"
+                                    onclick="searchMedications()">Search</button>
                             </div>
 
                             <!-- Display matching medications as options -->
                             <select id="medication_select" name="medication_id">
                                 <% medications.forEach((medication)=> { %>
                                     <option value="<%= medication.medication_id %>">
-                                        <%= medication.medication_name %> - <%= medication.medication_strength %>
+                                        <%= medication.medication_name %>
+                                            <%= medication.medication_strength %> (Inv:<%= medication.current_inventory
+                                                    %>)
                                     </option>
                                     <% }); %>
                             </select>
