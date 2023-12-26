@@ -1,7 +1,11 @@
+// inventoryUsageModel.js
 const db = require('../database/index');
 
 const inventoryUsageModel = {};
 
+/***********************************************
+ * Get all medications from current_inventory
+ ***********************************************/
 inventoryUsageModel.getAllMedications = async () => {
     try {
         const sql = `
@@ -16,6 +20,9 @@ inventoryUsageModel.getAllMedications = async () => {
     }
 };
 
+/***********************************************
+ * Get medications that match the search term
+ ***********************************************/
 inventoryUsageModel.getMatchingMedications = async (searchTerm) => {
     try {
         const sql = `
@@ -31,6 +38,9 @@ inventoryUsageModel.getMatchingMedications = async (searchTerm) => {
     }
 };
 
+/***********************************************
+ * Record medication usage in past_inventory
+ ***********************************************/
 inventoryUsageModel.recordUsage = async (medication_id, total_units, total_scripts, usage_date) => {
     try {
         // Get current inventory for the medication

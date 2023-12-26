@@ -1,9 +1,13 @@
+// inventoryUsageController.js
 const express = require("express");
 const router = express.Router();
 const Util = require("../utilities");
 const inventoryUsageModel = require("../models/inventoryUsageModel");
 const inventoryUsageController = {};
 
+/***********************************************
+ * Show the inventory usage form
+ ***********************************************/
 inventoryUsageController.showInventoryUsageForm = async (req, res) => {
     try {
         const nav = await Util.getNav();
@@ -28,6 +32,9 @@ inventoryUsageController.showInventoryUsageForm = async (req, res) => {
     }
 };
 
+/***********************************************
+ * Record inventory usage
+ ***********************************************/
 inventoryUsageController.recordInventoryUsage = async (req, res) => {
     try {
         const { medication_id, total_units, total_scripts, usage_date } = req.body;
