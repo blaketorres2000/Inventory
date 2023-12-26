@@ -8,6 +8,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const addInventoryRoute = require("./routes/addInventoryRoute");
 const inventoryUsageRoute = require("./routes/inventoryUsageRoute");
+const incomingInventoryRoute = require("./routes/incomingInventoryRoute");
 const flash = require("express-flash");
 const pool = require("./database/");
 const path = require('path');
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.set("view engine", "ejs");
 app.use(flash());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Adjust session store based on NODE_ENV
 let sessionStore;
@@ -54,6 +56,7 @@ app.use(
  ************************************************/
 app.use("/add-inventory", addInventoryRoute);
 app.use("/inventory-usage", inventoryUsageRoute);
+app.use("/incoming-inventory", incomingInventoryRoute);
 
 /*************************************************
  * Start the server on port 5400

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incoming Inventory</title>
+    <link rel="stylesheet" href="/css/styles.css" media="screen">
+    <script>
+        function searchMedications() {
+            const searchTerm = document.getElementById("medication_search").value;
+            window.location.href = `/incoming-inventory?medication_search=${searchTerm}`;
+        }
+
+        function addInventory() {
+            const medicationId = document.getElementById("medication_select").value;
+            const addedInventory = document.getElementById("added_inventory").value;
+
+            console.log('Medication ID:', medicationId);
+            console.log('Added Inventory:', addedInventory);
+        }
+    </script>
+</head>
+
+<body>
+
+    <header class="add_inventory_header">
+        <h1>Pharmacy Inventory Management System</h1>
+        <nav class="add_inventory_nav">
+            <a href="/">Home</a>
+            <a href="/add-inventory">Add New Inventory</a>
+            <a href="/inventory-usage">Inventory Usage</a>
+            <a href="/incoming-inventory">Incoming Inventory</a>
+            <a href="/reports">Reports</a>
+        </nav>
+    </header>
+
+    <main class="incoming_inventory_main">
+
+        <% if (messages.success) { %>
+            <div class="alert alert-success">
+                <%= messages.success %>
+            </div>
+            <% } %>
+
+                <% if (messages.error) { %>
+                    <div class="alert alert-danger">
+                        <%= messages.error %>
+                    </div>
+                    <% } %>
+
+                        <form class="all-forms" action="/incoming-inventory" method="post">
+                            <h1>Incoming Inventory</h1>
+
+                            <!-- Add the button and input to your form -->
+                            <label class="search_label" for="medication_search">Search Medication:</label>
+                            <div class="usage-search-container">
+                                <input type="text" id="medication_search" name="medication_search"
+                                    placeholder="Type medication name">
+                                <button class="usage-page-search" type="button"
+                                    onclick="searchMedications()">Search</button>
+                            </div>
+
+                            <!-- Display matching medications as options -->
+                            <select id="medication_select" name="medication_id">
+                                <% medications.forEach((medication)=> { %>
+                                    <option value="<%= medication.medication_id %>">
+                                        <%= medication.medication_name %>
+                                            <%= medication.medication_strength %> (Inv:<%= medication.current_inventory
+                                                    %>)
+                                    </option>
+                                    <% }); %>
+                            </select>
+
+                            <label class="added_inventory_label" for="added_inventory">Incoming Inventory:</label>
+                            <input type="text" id="added_inventory" name="added_inventory"
+                                placeholder="Enter added inventory" required>
+
+                            <button type="submit">Add Inventory</button>
+                        </form>
+    </main>
+</body>
+
+</html>
