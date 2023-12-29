@@ -70,7 +70,7 @@ reportsController.generateByMedicationResult = async function (req, res, next) {
         title: "By Medication Report",
         reportResults,
         reportTotals,
-        medications: [], // You might need to provide a list of medications if needed
+        medications: [],
         currentDate: Util.getCurrentDate(),
         errors: null,
       });
@@ -85,7 +85,7 @@ reportsController.generateByMedicationResult = async function (req, res, next) {
 };
 
 /***********************************************
- * Render the by date range reports form
+ * Render the "By Date" reports form
  ***********************************************/
 reportsController.deliverByDateView = async function (req, res, next) {
   try {
@@ -131,7 +131,8 @@ reportsController.generateByDateResult = async function (req, res, next) {
       const reportTotals = reportsModel.calculateReportTotals(reportResults);
       // Calculate total scripts for all medications combined
       const totalScriptsForAllMedications = reportResults.reduce(
-        (total, result) => total + Number(result.total_scripts), 0
+        (total, result) => total + Number(result.total_scripts),
+        0
       );
 
       // Render the results in the view
@@ -141,6 +142,7 @@ reportsController.generateByDateResult = async function (req, res, next) {
         reportTotals,
         medications: [],
         strengths: [],
+        classes: [],
         currentDate: Util.getCurrentDate(),
         errors: null,
         reportStartDate: startDate,
@@ -153,6 +155,82 @@ reportsController.generateByDateResult = async function (req, res, next) {
     }
   } catch (error) {
     console.log("Error in generateByDateResult:", error);
+    next(error);
+  }
+};
+
+/***********************************************
+ * Render the "By Class" reports form
+ ***********************************************/
+reportsController.deliverByClassView = async function (req, res, next) {
+  try {
+    const nav = await Util.getNav();
+    let medications;
+
+    if (req.query.medication_search) {
+      medications = await reportsModel.getMatchingMedications(
+        req.query.medication_search
+      );
+    } else {
+      medications = await reportsModel.getAllMedications();
+    }
+    res.render("reports/by-class-report", {
+      title: "Generate Report By Class",
+      nav,
+      messages: req.flash(),
+      medications,
+      currentDate: Util.getCurrentDate(),
+      errors: null,
+    });
+  } catch (error) {
+    console.log("Error in by class view:", error);
+    next(error);
+  }
+};
+
+/***********************************************
+ * Generate "By Class" report results
+ ***********************************************/
+reportsController.generateByClassResult = async function (req, res, next) {
+  try {
+    const { control_class, startDate, endDate, reportType } = req.body;
+
+    // Check the reportType and handle the request accordingly
+    if (reportType === "by-class-result") {
+      // Fetch report results from the model
+      const reportResults = await reportsModel.getByClassReport(
+        control_class,
+        startDate,
+        endDate
+      );
+
+      // Calculate report totals
+      const reportTotals = reportsModel.calculateReportTotals(reportResults);
+
+      // Calculate total scripts for all medications combined
+      const totalScriptsForAllMedications = reportResults.reduce(
+        (total, result) => total + Number(result.total_scripts),
+        0
+      );
+
+      // Render the results in the view
+      res.render("reports/by-class-report", {
+        title: "Generate Report By Class",
+        reportResults,
+        reportTotals,
+        medications: [],
+        currentDate: Util.getCurrentDate(),
+        errors: null,
+        reportStartDate: startDate,
+        reportEndDate: endDate,
+        totalScriptsForAllMedications,
+      });
+    } else {
+      // Handle other report types or show an error
+      res.status(400).send("Invalid reportType");
+    }
+  } catch (error) {
+    console.log("Error in generate By Class Result:", error);
     next(error);
   }
 };

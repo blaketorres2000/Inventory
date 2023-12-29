@@ -99,6 +99,7 @@ reportsModel.getByDateRangeReport = async (startDate, endDate) => {
     SELECT
     c.medication_name,
     c.medication_strength,
+    c.control_class,
     SUM(p.total_scripts) AS total_scripts,
     SUM(p.total_units) AS total_units
     FROM
@@ -108,8 +109,43 @@ reportsModel.getByDateRangeReport = async (startDate, endDate) => {
     WHERE
     p.day BETWEEN $1 AND $2
     GROUP BY
-    c.medication_name, c.medication_strength      `;
+    c.medication_name, c.medication_strength, c.control_class
+    `;
     const reportResults = await db.query(sql, [startDate, endDate]);
+    return reportResults;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+/***********************************************
+ * Get "By Class" report results from past_inventory
+ ***********************************************/
+reportsModel.getByClassReport = async (control_class, startDate, endDate) => {
+  try {
+    const sql = `
+    SELECT
+    c.medication_name,
+    c.medication_strength,
+    c.control_class,
+    SUM(p.total_scripts) AS total_scripts,
+    SUM(p.total_units) AS total_units
+    FROM
+    past_inventory p
+    JOIN
+    current_inventory c ON p.medication_id = c.medication_id
+    WHERE c.control_class = $1
+    AND p.day BETWEEN $2 AND $3
+    GROUP BY
+    c.medication_name, c.medication_strength, c.control_class
+    `;
+
+    const reportResults = await db.query(sql, [
+      control_class,
+      startDate,
+      endDate,
+    ]);
     return reportResults;
   } catch (error) {
     console.error(error);

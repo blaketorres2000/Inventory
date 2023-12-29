@@ -86,13 +86,16 @@
             </p>
 
             <!-- Add this dropdown above the table -->
-            <label for="sortOption">Sort By:</label>
-            <select id="sortOption" onchange="sortTable()">
-                <option value="medication_name">Medication A-Z</option>
-                <option value="total_scripts">Scripts Filled (High to Low)</option>
-                <option value="total_units">Units Filled (High to Low)</option>
-                <option value="average_units_per_script">Avg Units (High to Low)</option>
-            </select>
+            <div class="sort-container">
+                <label for="sortOption">Sort By:</label>
+                <select id="sortOption" onchange="sortTable()">
+                    <option value="medication_name">Medication Z-A</option>
+                    <option value="control_class">By Class</option>
+                    <option value="total_scripts">Scripts Filled (High to Low)</option>
+                    <option value="total_units">Units Filled (High to Low)</option>
+                    <option value="average_units_per_script">Avg Units (High to Low)</option>
+                </select>
+            </div>
 
             <!-- Display the total uses for each med in a table -->
             <table>
@@ -100,6 +103,7 @@
                     <tr>
                         <th onclick="sortTable('medication_name')">Medication</th>
                         <th onclick="sortTable('medication_strength')">Strength</th>
+                        <th onclick="sortTable('control_class')">Class</th>
                         <th onclick="sortTable('total_scripts')">Scripts Filled</th>
                         <th onclick="sortTable('total_units')">Units Filled</th>
                         <th onclick="sortTable('average_units_per_script')">Avg Units per Script</th>
@@ -113,6 +117,9 @@
                             </td>
                             <td data-key="medication_strength">
                                 <%= result.medication_strength %>
+                            </td>
+                            <td data-key="control_class">
+                                <%= result.control_class %>
                             </td>
                             <td data-key="total_scripts">
                                 <%= result.total_scripts %>

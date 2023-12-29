@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search By Class Report</title>
+    <link rel="stylesheet" href="/css/styles.css" media="screen">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add event listener to the dropdown
+            const sortDropdown = document.getElementById('sortOption');
+            sortDropdown.addEventListener('change', function () {
+                sortTable(this.value);
+            });
+        });
+
+        function sortTable(sortBy) {
+            const table = document.querySelector('table');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            // Sort the rows based on the selected column in descending order
+            rows.sort((a, b) => {
+                const aValue = getValue(a, sortBy);
+                const bValue = getValue(b, sortBy);
+                return sortBy === 'total_units' || sortBy === 'average_units'
+                    ? parseFloat(bValue) - parseFloat(aValue)
+                    : bValue.localeCompare(aValue);
+            });
+
+            // Remove existing rows from the table
+            rows.forEach(row => tbody.removeChild(row));
+
+            // Append the sorted rows back to the table
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        function getValue(row, key) {
+            const cell = row.querySelector(`td[data-key="${key}"]`);
+            return cell ? cell.textContent : '';
+        }
+    </script>
+</head>
+
+<body>
+
+    <header class="add_inventory_header">
+        <h1>Pharmacy Inventory Management System</h1>
+        <nav class="add_inventory_nav">
+            <a href="/">Home</a>
+            <a href="/add-inventory">Add New Inventory</a>
+            <a href="/inventory-usage">Inventory Usage</a>
+            <a href="/incoming-inventory">Incoming Inventory</a>
+            <a href="/reports">Reports</a>
+        </nav>
+    </header>
+
+    <main class="by-class-main">
+
+        <form class="all-forms" action="/by-class-result" method="post">
+
+            <h2>Generate Report By Control Class</h2>
+
+            <!-- Display classes as options -->
+            <select id="class_select" name="control_class">
+                <option value="" selected disabled>Select Control Class</option>
+                <% const uniqueControlClasses=Array.from(new Set(medications.map(medication=>
+                    medication.control_class))); %>
+                    <% uniqueControlClasses.forEach(controlClass=> { %>
+                        <option value="<%= controlClass %>">
+                            <%= controlClass %>
+                        </option>
+                        <% }); %>
+            </select>
+            <div class="date-inputs">
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" name="startDate" required>
+
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" name="endDate" required>
+            </div>
+
+            <input type="hidden" name="reportType" value="by-class-result">
+            <button class="generate-button" type="submit">Generate Report</button>
+        </form>
+
+        <!-- Display the report results if available -->
+        <% if (typeof reportResults !=='undefined' && reportResults) { %>
+            <h3>Report Results</h3>
+            <p>From <%= reportStartDate %> to <%= reportEndDate %>
+            </p>
+
+            <!-- Display totals -->
+            <p>Total Scripts Filled: <%= totalScriptsForAllMedications %>
+            </p>
+
+            <!-- Add this dropdown above the table -->
+            <div class="sort-container">
+                <label for="sortOption">Sort By:</label>
+                <select id="sortOption" onchange="sortTable()">
+                    <option value="medication_name">Medication Z-A</option>
+                    <option value="total_scripts">Scripts Filled (High to Low)</option>
+                    <option value="total_units">Units Filled (High to Low)</option>
+                    <option value="average_units_per_script">Avg Units (High to Low)</option>
+                </select>
+            </div>
+
+            <!-- Display the total uses for each med in a table -->
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortTable('medication_name')">Medication</th>
+                        <th onclick="sortTable('medication_strength')">Strength</th>
+                        <th onclick="sortTable('total_scripts')">Scripts Filled</th>
+                        <th onclick="sortTable('total_units')">Units Filled</th>
+                        <th onclick="sortTable('average_units_per_script')">Avg Units per Script</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% reportResults.forEach(result=> { %>
+                        <tr>
+                            <td data-key="medication_name">
+                                <%= result.medication_name %>
+                            </td>
+                            <td data-key="medication_strength">
+                                <%= result.medication_strength %>
+                            </td>
+                            <td data-key="total_scripts">
+                                <%= result.total_scripts %>
+                            </td>
+                            <td data-key="total_units">
+                                <%= result.total_units %>
+                            </td>
+                            <td data-key="average_units_per_script">
+                                <%= (result.total_units / result.total_scripts).toFixed(2) %>
+                            </td>
+                        </tr>
+                        <% }); %>
+                </tbody>
+            </table>
+            <% } %>
+
+    </main>
+
+</body>
+
+</html>
