@@ -9,6 +9,7 @@ const bodyParser = require("body-parser");
 const addInventoryRoute = require("./routes/addInventoryRoute");
 const inventoryUsageRoute = require("./routes/inventoryUsageRoute");
 const incomingInventoryRoute = require("./routes/incomingInventoryRoute");
+const reportsRoute = require("./routes/reportsRoute");
 const flash = require("express-flash");
 const pool = require("./database/");
 const path = require('path');
@@ -57,6 +58,7 @@ app.use(
 app.use("/add-inventory", addInventoryRoute);
 app.use("/inventory-usage", inventoryUsageRoute);
 app.use("/incoming-inventory", incomingInventoryRoute);
+app.use("/", reportsRoute);
 
 /*************************************************
  * Start the server on port 5400

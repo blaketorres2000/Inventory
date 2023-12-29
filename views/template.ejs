@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template</title>
+    <link rel="stylesheet" href="/css/styles.css" media="screen">
+</head>
+
+<body>
+
+    <header class="add_inventory_header">
+        <h1>Pharmacy Inventory Management System</h1>
+        <nav class="add_inventory_nav">
+            <a href="/">Home</a>
+            <a href="/add-inventory">Add New Inventory</a>
+            <a href="/inventory-usage">Inventory Usage</a>
+            <a href="/incoming-inventory">Incoming Inventory</a>
+            <a href="/reports">Reports</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <% if (messages.success) { %>
+            <!-- Display success messages if any -->
+            <div class="alert alert-success">
+                <%= messages.success %>
+            </div>
+        <% } %>
+
+        <% if (messages.error) { %>
+            <!-- Display error messages if any -->
+            <div class="alert alert-danger">
+                <%= messages.error %>
+            </div>
+        <% } %>
+
+    </main>
+
+</body>
+
+</html>

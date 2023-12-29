@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Reports</title>
+    <link rel="stylesheet" href="/css/styles.css" media="screen">
+</head>
+
+<body>
+
+    <header class="add_inventory_header">
+        <h1>Pharmacy Inventory Management System</h1>
+        <nav class="add_inventory_nav">
+            <a href="/">Home</a>
+            <a href="/add-inventory">Add New Inventory</a>
+            <a href="/inventory-usage">Inventory Usage</a>
+            <a href="/incoming-inventory">Incoming Inventory</a>
+            <a href="/reports">Reports</a>
+        </nav>
+    </header>
+
+    <main class="reports_main">
+
+        <% if (messages.success) { %>
+            <!-- Display success messages if any -->
+            <div class="alert alert-success">
+                <%= messages.success %>
+            </div>
+            <% } %>
+
+                <% if (messages.error) { %>
+                    <!-- Display error messages if any -->
+                    <div class="alert alert-danger">
+                        <%= messages.error %>
+                    </div>
+                    <% } %>
+
+                        <form class="all-forms" method="get">
+                            <h1>Reports</h1>
+
+                            <!-- Select report type -->
+                            <label for="reportType">Select Report Type:</label>
+                            <select id="reportType" name="reportType">
+                                <option value="by-medication-view">By Medication</option>
+                                <option value="by-class">By Class</option>
+                                <option value="by-date-view">By Date Range</option>
+                                <option value="medication-comparison">Medication Comparison</option>
+                            </select>
+
+                            <!-- Dynamically set the action based on the selected report type -->
+                            <button type="submit" onclick="setAction()">Go To Report</button>
+
+                            <script>
+                                function setAction() {
+                                    var reportType = document.getElementById("reportType").value;
+                                    var form = document.querySelector("form");
+                                    form.action = reportType;
+                                }
+                            </script>
+                        </form>
+    </main>
+
+</body>
+
+</html>

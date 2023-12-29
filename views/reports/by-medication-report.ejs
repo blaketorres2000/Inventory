@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search By Medication Report</title>
+    <link rel="stylesheet" href="/css/styles.css" media="screen">
+    <script>
+        function searchMedications() {
+            const searchTerm = document.getElementById("medication_search").value;
+            window.location.href = `/by-medication-view?medication_search=${searchTerm}`;
+        }
+    </script>
+</head>
+
+<body>
+
+    <header class="add_inventory_header">
+        <h1>Pharmacy Inventory Management System</h1>
+        <nav class="add_inventory_nav">
+            <a href="/">Home</a>
+            <a href="/add-inventory">Add New Inventory</a>
+            <a href="/inventory-usage">Inventory Usage</a>
+            <a href="/incoming-inventory">Incoming Inventory</a>
+            <a href="/reports">Reports</a>
+        </nav>
+    </header>
+
+    <main class="by-med-main">
+
+        <form class="all-forms" action="/by-medication-result" method="post">
+
+            <h2>Get Report By Medication</h2>
+
+            <label class="search_label" for="medication_search">Search Medication:</label>
+            <div class="usage-search-container">
+                <input type="text" id="medication_search" name="medication_search" placeholder="Type medication name">
+                <button class="usage-page-search" type="button" onclick="searchMedications()">Search</button>
+            </div>
+
+            <!-- Display matching medications as options -->
+            <select id="medication_select" name="medication_id">
+                <% medications.forEach((medication)=> { %>
+                    <option value="<%= medication.medication_id %>">
+                        <%= medication.medication_name %>
+                            <%= medication.medication_strength %> (Inv:<%= medication.current_inventory %>)
+                    </option>
+                    <% }); %>
+            </select>
+
+            <div class="date-inputs">
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" name="startDate" required>
+
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" name="endDate" required>
+            </div>
+
+            <input type="hidden" name="reportType" value="by-medication-result">
+            <button class="generate-button" type="submit">Generate Report</button>
+        </form>
+
+        <!-- Display the report results if available -->
+        <% if (typeof reportResults !=='undefined' && reportResults) { %>
+            <h3>Report Results</h3>
+
+            <!-- Display totals -->
+            <p>Total Days Used: <%= reportTotals.times %>
+            </p>
+            <p>Total Scripts Filled: <%= reportTotals.totalScripts %>
+            </p>
+            <p>Total Units Filled: <%= reportTotals.totalUnits %>
+            </p>
+            <p>Average Units per Script: <%= reportTotals.averageUnitsPerScript.toFixed(2) %>
+            </p>
+
+            <!-- Display the daily uses in a table -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date Used</th>
+                        <th>Scripts Filled</th>
+                        <th>Units Filled</th>
+                        <th>Ending Inventory</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% reportResults.forEach(result=> { %>
+                        <tr>
+                            <td>
+                                <%= result.date_used.toLocaleDateString() %>
+                            </td>
+                            <td>
+                                <%= result.total_scripts %>
+                            </td>
+                            <td>
+                                <%= result.total_units%>
+                            </td>
+                            <td>
+                                <%= result.ending_inventory %>
+                            </td>
+                        </tr>
+                        <% }); %>
+                </tbody>
+            </table>
+
+            <% } %>
+
+    </main>
+
+</body>
+
+</html>
