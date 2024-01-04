@@ -21,9 +21,10 @@
         <h1>Pharmacy Inventory Management System</h1>
         <nav class="add_inventory_nav">
             <a href="/">Home</a>
-            <a href="/add-inventory">Add New Inventory</a>
-            <a href="/inventory-usage">Inventory Usage</a>
-            <a href="/incoming-inventory">Incoming Inventory</a>
+            <a href="/add-inventory">Add New</a>
+            <a href="/update-inventory">Update</a>
+            <a href="/inventory-usage">Log Usage</a>
+            <a href="/incoming-inventory">Incoming</a>
             <a href="/reports">Reports</a>
         </nav>
     </header>
@@ -36,19 +37,31 @@
 
             <label class="search_label" for="medication_search">Search Medication:</label>
             <div class="usage-search-container">
-                <input type="text" id="medication_search" name="medication_search" placeholder="Type medication name">
-                <button class="usage-page-search" type="button" onclick="searchMedications()">Search</button>
+                <input type="text" id="medication_search" name="medication_search"
+                    placeholder="Type medication name">
+                <button class="usage-page-search" type="button"
+                    onclick="searchMedications()">Search</button>
             </div>
 
             <!-- Display matching medications as options -->
-            <select id="medication_select" name="medication_id">
-                <% medications.forEach((medication)=> { %>
-                    <option value="<%= medication.medication_id %>">
-                        <%= medication.medication_name %>
-                            <%= medication.medication_strength %> (Inv:<%= medication.current_inventory %>)
-                    </option>
-                    <% }); %>
-            </select>
+            <div class="med-dropdown">
+                <p class="note">** Select From Matching Medications **</p>
+                <p class="note">** in Dropdown Menu Below **</p>
+                <select id="medication_select" name="medication_id">
+                    <% medications.forEach((medication)=> { %>
+                        <option value="<%= medication.medication_id %>"
+                            data-name="<%= medication.medication_name %>"
+                            data-strength="<%= medication.medication_strength %>"
+                            data-class="<%= medication.control_class %>"
+                            data-current_inv="<%= medication.current_inventory %>"
+                            data-threshold="<%= medication.threshold %>"
+                            data-used="<%= medication.last_used %>" data-unit="<%= medication.unit %>">
+                            <%= medication.medication_name %>
+                            <%= medication.medication_strength %> (inv:<%= medication.current_inventory %>)
+                        </option>
+                        <% }); %>
+                </select>
+            </div>
 
             <div class="date-inputs">
                 <label for="startDate">Start Date:</label>

@@ -72,6 +72,12 @@ header nav a:hover {
     text-align: left;
 }
 
+.note {
+    font-size: 16px;
+    color: rgb(107, 1, 1);
+    margin-bottom: -15px;
+}
+
 .all-forms input[type="text"] {
     width: 100%;
     padding: 0.5em;
@@ -86,7 +92,8 @@ header nav a:hover {
 
 button {
     margin-top: 1em;
-    width: 40%;
+    width: 150px;
+    max-width: 40%;
     padding: 0.5em;
     font-size: 16px;
     border: 1px solid #CCC;
@@ -197,4 +204,8 @@ tbody tr:nth-child(even) {
 .sort-container {
 margin-top: 30px;
 font-size: 14px;
+}
+
+.by-class-main .schedule-heading {
+    margin-top: -25px;
 }

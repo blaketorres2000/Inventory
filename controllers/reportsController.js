@@ -219,6 +219,7 @@ reportsController.generateByClassResult = async function (req, res, next) {
         reportResults,
         reportTotals,
         medications: [],
+        control_class,
         currentDate: Util.getCurrentDate(),
         errors: null,
         reportStartDate: startDate,

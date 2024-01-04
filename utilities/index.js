@@ -1,4 +1,5 @@
 const Util = {};
+updateModel = require("../models/updateInventoryModel");
 
 /* ************************
  * Constructs the navigation

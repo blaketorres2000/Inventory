@@ -1,4 +1,3 @@
-// inventoryUsageModel.js
 const db = require('../database/index');
 
 const inventoryUsageModel = {};
@@ -56,13 +55,6 @@ inventoryUsageModel.recordUsage = async (medication_id, total_units, total_scrip
         // Calculate updated current inventory
         const updatedInventory = currentInventory.current_inventory - parseInt(total_units, 10);
 
-        console.log('Medication ID:', medication_id);
-        console.log('Total Units:', total_units);
-        console.log('Total Scripts:', total_scripts);
-        console.log('Usage Date:', usage_date);
-        console.log('Current Inventory:', currentInventory.current_inventory);
-        console.log('Updated Inventory:', updatedInventory);
-
         // Start a transaction to ensure atomicity
         await db.tx(async (t) => {
             // Record usage in past_inventory
@@ -71,16 +63,12 @@ inventoryUsageModel.recordUsage = async (medication_id, total_units, total_scrip
                 VALUES ($1, $2, $3, $4, $5)
             `, [medication_id, usage_date, total_scripts, total_units, updatedInventory]);
 
-            console.log('Recorded in past_inventory');
-
-            // Update current inventory
+            // Update current inventory and last_used
             await t.none(`
                 UPDATE current_inventory
-                SET current_inventory = $1
-                WHERE medication_id = $2
-            `, [updatedInventory, medication_id]);
-
-            console.log('Updated current_inventory:', updatedInventory);
+                SET current_inventory = $1, last_used = $2
+                WHERE medication_id = $3
+            `, [updatedInventory, usage_date, medication_id]);
         });
 
         return true;
