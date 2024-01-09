@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template</title>
+    <link rel="stylesheet" href="/css/styles.css" media="screen">
+    <script>
+        function searchMedications(index) {
+            const searchTerm = document.getElementById("medication_search").value;
+            window.location.href = `/incoming-inventory?medication_search=${searchTerm}`;
+        }
+
+        function addInventory() {
+            const medicationId = document.getElementById("medication_select").value;
+            const addedInventory = document.getElementById("added_inventory").value;
+        }
+    </script>
+</head>
+
+<body>
+
+    <header class="add_inventory_header">
+        <h1>Pharmacy Inventory Management System</h1>
+        <nav class="add_inventory_nav">
+            <a href="/">Home</a>
+            <a href="/add-inventory">Add New</a>
+            <a href="/update-inventory">Update</a>
+            <a href="/inventory-usage">Log Usage</a>
+            <a href="/incoming-inventory">Incoming</a>
+            <a href="/reports">Reports</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <% if (messages.success) { %>
+            <!-- Display success messages if any -->
+            <div class="alert alert-success">
+                <%= messages.success %>
+            </div>
+            <% } %>
+
+                <% if (messages.error) { %>
+                    <!-- Display error messages if any -->
+                    <div class="alert alert-danger">
+                        <%= messages.error %>
+                    </div>
+                    <% } %>
+
+                        <form class="all-forms" action="/compare-medications-result" method="post">
+                            <h1>Medication Comparison Report</h1>
+
+                            <!-- Input fields for up to 10 medications -->
+                            <% for (let i=1; i <=10; i++) { %>
+                                <div>
+                                    <label for="medication<%= i %>_search">Search Medication <%= i %>:</label>
+                                    <div class="usage-search-container">
+                                        <input type="text" id="medication<%= i %>_search"
+                                            name="medication_search_<%= i %>" placeholder="Type medication name">
+                                        <button class="usage-page-search" type="button"
+                                            onclick="searchMedications(i)">Search</button>
+                                    </div>
+
+                                    <div class="med-dropdown">
+                                        <p class="note">** Select From Matching Medications **</p>
+                                        <p class="note">** in Dropdown Menu Below **</p>
+                                        <select id="medication<%= i %>_select" name="medication_id_<%= i %>">
+                                            <% medications.forEach((medication)=> { %>
+                                                <option value="<%= medication.medication_id %>"
+                                                    data-name="<%= medication.medication_name %>"
+                                                    data-strength="<%= medication.medication_strength %>"
+                                                    data-class="<%= medication.control_class %>"
+                                                    data-current_inv="<%= medication.current_inventory %>"
+                                                    data-threshold="<%= medication.threshold %>"
+                                                    data-used="<%= medication.last_used %>"
+                                                    data-unit="<%= medication.unit %>">
+                                                    <%= medication.medication_name %>
+                                                        <%= medication.medication_strength %> (inv:<%=
+                                                                medication.current_inventory %>)
+                                                </option>
+                                                <% }); %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <% } %>
+
+                                    <button type="submit">Generate Report</button>
+                        </form>
+
+<!-- Display the medication comparison report results if available -->
+<% if (typeof selectedMedications !== 'undefined' && selectedMedications.length > 0) { %>
+    <h2>Selected Medications:</h2>
+    <ul>
+        <% selectedMedications.forEach((medication) => { %>
+            <li>
+                <%= medication.medication_name %>
+                <%= medication.medication_strength %> (inv:<%= medication.current_inventory %>)
+            </li>
+        <% }); %>
+    </ul>
+
+    <h3>Medication Comparison Results</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Attribute</th>
+                <th>Medication 1</th>
+                <th>Medication 2</th>
+                <!-- Add columns for each selected medication -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Strength</td>
+                <td><%= selectedMedications[0].medication_strength %></td>
+                <td><%= selectedMedications[1].medication_strength %></td>
+                <!-- Add rows for each attribute you want to compare -->
+            </tr>
+            <!-- Add more rows as needed -->
+        </tbody>
+    </table>
+
+    <a href="/reports"><button>Back To Reports</button></a>
+<% } %>
+    </main>
+
+</body>
+
+</html>

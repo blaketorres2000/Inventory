@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report: Medications Below Threshold</title>
+    <link rel="stylesheet" href="/css/styles.css" media="screen">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add event listener to the dropdown
+            const sortDropdown = document.getElementById('sortOption');
+            sortDropdown.addEventListener('change', function () {
+                sortTable(this.value);
+            });
+        });
+
+        function sortTable(sortBy) {
+            const table = document.querySelector('table');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            // Sort the rows based on the selected column in descending order
+            rows.sort((a, b) => {
+                const aValue = getValue(a, sortBy);
+                const bValue = getValue(b, sortBy);
+                return sortBy === 'total_units' || sortBy === 'average_units'
+                    ? parseFloat(bValue) - parseFloat(aValue)
+                    : bValue.localeCompare(aValue);
+            });
+
+            // Remove existing rows from the table
+            rows.forEach(row => tbody.removeChild(row));
+
+            // Append the sorted rows back to the table
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        function getValue(row, key) {
+            const cell = row.querySelector(`td[data-key="${key}"]`);
+            return cell ? cell.textContent : '';
+        }
+    </script>
+</head>
+
+<body>
+
+    <header class="add_inventory_header">
+        <h1>Pharmacy Inventory Management System</h1>
+        <nav class="add_inventory_nav">
+            <a href="/">Home</a>
+            <a href="/add-inventory">Add New</a>
+            <a href="/update-inventory">Update</a>
+            <a href="/inventory-usage">Log Usage</a>
+            <a href="/incoming-inventory">Incoming</a>
+            <a href="/reports">Reports</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <% if (messages.success) { %>
+            <!-- Display success messages if any -->
+            <div class="alert alert-success">
+                <%= messages.success %>
+            </div>
+            <% } %>
+
+                <% if (messages.error) { %>
+                    <!-- Display error messages if any -->
+                    <div class="alert alert-danger">
+                        <%= messages.error %>
+                    </div>
+                    <% } %>
+
+
+                        <form class="all-forms" action="/threshold-report" method="get">
+
+                            <h1>Medications Below Threshold</h1>
+                        </form>
+                        <table class="report-table">
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable('medication_name')">Medication</th>
+                                    <th onclick="sortTable('medication_strength')">Strength</th>
+                                    <th onclick="sortTable('control_class')">Class</th>
+                                    <th onclick="sortTable('current_inventory')">Current Inv</th>
+                                    <th onclick="sortTable('threshold')">Threshold</th>
+                                    <th onclick="sortTable('last_used')">Last Used</th>
+                                    <th onclick="sortTable('unit')">Unit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% reportResults.forEach(result=> { %>
+                                    <tr>
+                                        <td data-key="medication_name">
+                                            <%= result.medication_name %>
+                                        </td>
+                                        <td data-key="medication_strength">
+                                            <%= result.medication_strength %>
+                                        </td>
+                                        <td data-key="control_class">
+                                            <%= result.control_class %>
+                                        </td>
+                                        <td data-key="current_inventory">
+                                            <%= result.current_inventory %>
+                                        </td>
+                                        <td data-key="threshold">
+                                            <%= result.threshold %>
+                                        </td>
+                                        <td data-key="last_used">
+                                            <%= Util.formatDate(result.last_used) %>
+                                        </td>
+                                        <td data-key="unit">
+                                            <%= result.unit %>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+
+                        <a href="/reports"><button>Back To Reports</button></a>
+    </main>
+
+</body>
+
+</html>

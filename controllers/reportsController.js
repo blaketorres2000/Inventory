@@ -1,3 +1,4 @@
+const { as } = require("pg-promise");
 const reportsModel = require("../models/reportsModel");
 const Util = require("../utilities");
 const reportsController = {};
@@ -232,6 +233,83 @@ reportsController.generateByClassResult = async function (req, res, next) {
     }
   } catch (error) {
     console.log("Error in generate By Class Result:", error);
+    next(error);
+  }
+};
+
+/***********************************************
+ * Generate "Below Threshold" report results
+ ***********************************************/
+reportsController.deliverMedsBelowThreshold = async function (req, res, next) {
+  try {
+    const { reportType, control_class } = req.query; 
+    // Check the reportType and handle the request accordingly
+    if (reportType === "threshold-report") {
+      // Fetch report results from the model
+      const reportResults = await reportsModel.getThresholdReport(
+      );
+
+      // Render the results in the view
+      res.render("reports/threshold-report", {
+        title: "Medications Below Threshold",
+        reportResults,
+        medications: [],
+        control_class,
+        currentDate: Util.getCurrentDate(),
+        errors: null,
+        Util: Util,
+      });
+    } else {
+      // Handle other report types or show an error
+      res.status(400).send("Invalid reportType");
+    }
+  } catch (error) {
+    console.log("Error in generate By Class Result:", error);
+    next(error);
+  }
+};
+
+/***********************************************
+ * Display the medication comparison report view
+ ***********************************************/
+reportsController.compareMedications = async function (req, res, next) {
+  try {
+    const nav = await Util.getNav();
+    const medications = await reportsModel.getAllMedications();
+
+    res.render("reports/medication-comparison-report", {
+      title: "Medication Comparison Report",
+      nav,
+      messages: req.flash(),
+      medications,
+      errors: null,
+    });
+  } catch (error) {
+    console.log("Error in compare medications view:", error);
+    next(error);
+  }
+};
+
+/***********************************************
+ * Generate "Medication Comparison" report results
+ ***********************************************/
+reportsController.generateMedicationComparisonResult = async function (req, res, next) {
+  try {
+    const { medicationIds } = req.body;
+
+    // Fetch medications for the selected IDs
+    const selectedMedications = await reportsModel.getMedicationsByIds(medicationIds);
+
+    // Render the results in the view
+    res.render("reports/medication-comparison-report", {
+      title: "Medication Comparison Report",
+      selectedMedications,
+      medications: [],
+      currentDate: Util.getCurrentDate(),
+      errors: null,
+    });
+  } catch (error) {
+    console.log("Error in generateMedicationComparisonResult:", error);
     next(error);
   }
 };

@@ -23,4 +23,13 @@ router.post("/by-date-result", reportsController.generateByDateResult);
 // Display the by class report results
 router.post("/by-class-result", reportsController.generateByClassResult);
 
+// Display medications that fall below the minimum threshold
+router.get("/threshold-report", reportsController.deliverMedsBelowThreshold);
+
+// Display the medication comparison report form
+router.get("/compare-medications", reportsController.compareMedications);
+
+// Generate medication comparison report results
+router.post("/compare-medications-result", reportsController.generateMedicationComparisonResult);
+
 module.exports = router;

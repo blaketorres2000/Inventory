@@ -21,12 +21,19 @@
             const tbody = table.querySelector('tbody');
             const rows = Array.from(tbody.querySelectorAll('tr'));
 
+            // Custom sorting function for numeric values
+            const numericSort = (a, b) => {
+                const numA = parseFloat(a.replace(/[^0-9.-]+/g, ''));
+                const numB = parseFloat(b.replace(/[^0-9.-]+/g, ''));
+                return isNaN(numA) || isNaN(numB) ? 0 : numB - numA;
+            };
+
             // Sort the rows based on the selected column in descending order
             rows.sort((a, b) => {
                 const aValue = getValue(a, sortBy);
                 const bValue = getValue(b, sortBy);
-                return sortBy === 'total_units' || sortBy === 'average_units'
-                    ? parseFloat(bValue) - parseFloat(aValue)
+                return sortBy === 'total_scripts' || sortBy === 'total_units' || sortBy === 'average_units_per_script'
+                    ? numericSort(aValue, bValue)
                     : bValue.localeCompare(aValue);
             });
 
@@ -39,7 +46,7 @@
 
         function getValue(row, key) {
             const cell = row.querySelector(`td[data-key="${key}"]`);
-            return cell ? cell.textContent : '';
+            return cell ? cell.textContent.trim() : '';
         }
     </script>
 </head>
@@ -135,6 +142,9 @@
                         <% }); %>
                 </tbody>
             </table>
+
+            <a href="/reports"><button>Back To Reports</button></a>
+
             <% } %>
 
     </main>

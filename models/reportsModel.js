@@ -176,77 +176,41 @@ reportsModel.calculateReportTotals = (reportResults) => {
   };
 };
 
+/***********************************************
+ * Get medications that fall below the minimum threshold
+ ***********************************************/
+reportsModel.getThresholdReport = async () => {
+  try {
+    const sql = `
+              SELECT * FROM current_inventory
+              WHERE current_inventory.current_inventory < current_inventory.threshold
+          `;
+
+    const reportResults = await db.query(sql);
+    return reportResults;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+/***********************************************
+ * Get medications by ID for "Medication Comparison" report
+ ***********************************************/
+reportsModel.getMedicationsByIds = async (medicationIds) => {
+  try {
+    const sql = `
+              SELECT * FROM current_inventory
+              WHERE medication_id IN ($1:csv)
+          `;
+
+    const medications = await db.query(sql, [medicationIds]);
+    return medications;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 module.exports = reportsModel;
 
-// /***********************************************
-//  * Get "By Class" report results from past_inventory
-//  ***********************************************/
-// reportsModel.getByClassReport = async (classNumber, startDate, endDate) => {
-//   try {
-//     const sql = `
-//             SELECT p.day AS date_used, p.total_scripts, p.total_units, p.ending_inventory
-//             FROM past_inventory p
-//             JOIN current_inventory c ON p.medication_id = c.medication_id
-//             WHERE c.class_number = $1
-//             AND p.day BETWEEN $2 AND $3
-//         `;
-
-//     const reportResults = await db.query(sql, [
-//       classNumber,
-//       startDate,
-//       endDate,
-//     ]);
-//     return reportResults;
-//   } catch (error) {
-//     console.error(error);
-//     throw error;
-//   }
-// };
-
-// /***********************************************
-//  * Generate "By Medication" report
-//  ***********************************************/
-// reportsModel.generateByMedicationReport = async (
-//     medicationName,
-//     startDate,
-//     endDate
-//   ) => {
-//     try {
-//       const medicationInfo = await reportsModel.getMedicationInfo(medicationName);
-
-//       if (!medicationInfo) {
-//         throw new Error("Medication not found.");
-//       }
-
-//       const reportResults = await reportsModel.getByMedicationReport(
-//         medicationInfo.medication_id,
-//         startDate,
-//         endDate
-//       );
-//       return reportResults;
-//     } catch (error) {
-//       console.error(error);
-//       throw error;
-//     }
-//   };
-
-//   /***********************************************
-//    * Generate "By Class" report
-//    ***********************************************/
-//   reportsModel.generateByClassReport = async (
-//     classNumber,
-//     startDate,
-//     endDate
-//   ) => {
-//     try {
-//       const reportResults = await reportsModel.getByClassReport(
-//         classNumber,
-//         startDate,
-//         endDate
-//       );
-//       return reportResults;
-//     } catch (error) {
-//       console.error(error);
-//       throw error;
-//     }
-//   };

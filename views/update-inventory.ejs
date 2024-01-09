@@ -93,7 +93,7 @@
                                             data-class="<%= medication.control_class %>"
                                             data-current_inv="<%= medication.current_inventory %>"
                                             data-threshold="<%= medication.threshold %>"
-                                            data-used="<%= medication.last_used %>" data-unit="<%= medication.unit %>">
+                                            data-used="<%= Util.formatDate(medication.last_used) %>" data-unit="<%= medication.unit %>">
                                             <%= medication.medication_name %>
                                                 <%= medication.medication_strength %> (inv:<%= medication.current_inventory %>)
                                         </option>

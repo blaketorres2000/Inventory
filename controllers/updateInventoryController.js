@@ -34,6 +34,7 @@ updateInventoryController.showUpdateInventoryForm = async (req, res) => {
       unit: medications.unit,
       threshold: medications.threshold,
       last_used: medications.last_used,
+      Util: Util,
     });
   } catch (error) {
     console.error(error);

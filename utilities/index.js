@@ -24,4 +24,14 @@ Util.getCurrentDate = () => {
   return `${month}/${day}/${year}`;
 };
 
+/* ************************
+ * format the last used date
+ ************************** */
+
+Util.formatDate = function (dateString) {
+  const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
+  const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
+  return formattedDate;
+};
+
 module.exports = Util;
