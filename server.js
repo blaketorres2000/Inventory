@@ -21,6 +21,38 @@ const path = require("path");
  ************************************************/
 app.use(express.static(path.join(__dirname, "/public")));
 app.set("view engine", "ejs");
+app.use(flash());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+
+// Adjust session store based on NODE_ENV
+let sessionStore;
+if (process.env.NODE_ENV === "development") {
+  const MemoryStore = require("express-session").MemoryStore;
+  sessionStore = new MemoryStore({
+    checkPeriod: 86400000, // prune expired entries every 24h
+  });
+} else {
+  // Use a different store for production, such as connect-pg-simple for PostgreSQL
+  const PgStore = require("connect-pg-simple")(session);
+  sessionStore = new PgStore({
+    pool,
+    tableName: "session",
+  });
+}
+
+app.use(
+  session({
+    store: sessionStore,
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    name: "sessionId",
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+    },
+  })
+);
 
 /*************************************************
  * Routes
