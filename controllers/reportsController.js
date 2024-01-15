@@ -242,12 +242,11 @@ reportsController.generateByClassResult = async function (req, res, next) {
  ***********************************************/
 reportsController.deliverMedsBelowThreshold = async function (req, res, next) {
   try {
-    const { reportType, control_class } = req.query; 
+    const { reportType, control_class } = req.query;
     // Check the reportType and handle the request accordingly
     if (reportType === "threshold-report") {
       // Fetch report results from the model
-      const reportResults = await reportsModel.getThresholdReport(
-      );
+      const reportResults = await reportsModel.getThresholdReport();
 
       // Render the results in the view
       res.render("reports/threshold-report", {
@@ -265,6 +264,67 @@ reportsController.deliverMedsBelowThreshold = async function (req, res, next) {
     }
   } catch (error) {
     console.log("Error in generate By Class Result:", error);
+    next(error);
+  }
+};
+
+/***********************************************
+ * Render the "On-Hand" reports form
+ ***********************************************/
+reportsController.deliverOnHand = async function (req, res, next) {
+  try {
+    const nav = await Util.getNav();
+    let medications;
+
+    if (req.query.medication_search) {
+      medications = await reportsModel.getMatchingMedications(
+        req.query.medication_search
+      );
+    } else {
+      medications = await reportsModel.getAllMedications();
+    }
+    res.render("reports/on-hand-report", {
+      title: "Quantity On-Hand",
+      nav,
+      messages: req.flash(),
+      medications,
+      currentDate: Util.getCurrentDate(),
+      errors: null,
+    });
+  } catch (error) {
+    console.log("Error in On-Hand Report:", error);
+    next(error);
+  }
+};
+
+/***********************************************
+ * Generate "On-Hand" report results
+ ***********************************************/
+reportsController.generateOnHand = async function (req, res, next) {
+  try {
+    const { reportType, control_class } = req.body;
+
+    // Check the reportType and handle the request accordingly
+    if (reportType === "on-hand-result") {
+      // Fetch report results from the model
+      const reportResults = await reportsModel.getOnHand();
+
+      // Render the results in the view
+      res.render("reports/on-hand-report", {
+        title: "Quantity On-Hand",
+        reportResults,
+        medications: [],
+        control_class,
+        currentDate: Util.getCurrentDate(),
+        errors: null,
+        Util: Util,
+      });
+    } else {
+      // Handle other report types or show an error
+      res.status(400).send("Invalid reportType for on-hand-result");
+    }
+  } catch (error) {
+    console.log("Error in generate On-Hand Report:", error);
     next(error);
   }
 };
@@ -293,12 +353,18 @@ reportsController.compareMedications = async function (req, res, next) {
 /***********************************************
  * Generate "Medication Comparison" report results
  ***********************************************/
-reportsController.generateMedicationComparisonResult = async function (req, res, next) {
+reportsController.generateMedicationComparisonResult = async function (
+  req,
+  res,
+  next
+) {
   try {
     const { medicationIds } = req.body;
 
     // Fetch medications for the selected IDs
-    const selectedMedications = await reportsModel.getMedicationsByIds(medicationIds);
+    const selectedMedications = await reportsModel.getMedicationsByIds(
+      medicationIds
+    );
 
     // Render the results in the view
     res.render("reports/medication-comparison-report", {

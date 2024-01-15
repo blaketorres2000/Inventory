@@ -26,6 +26,12 @@ router.post("/by-class-result", reportsController.generateByClassResult);
 // Display medications that fall below the minimum threshold
 router.get("/threshold-report", reportsController.deliverMedsBelowThreshold);
 
+// Display Quantities on hand by class form
+router.get("/on-hand-report", reportsController.deliverOnHand);
+
+// Display Quantities on hand by class results
+router.post("/on-hand-result", reportsController.generateOnHand);
+
 // Display the medication comparison report form
 router.get("/compare-medications", reportsController.compareMedications);
 

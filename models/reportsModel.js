@@ -192,7 +192,26 @@ reportsModel.getThresholdReport = async () => {
     console.error(error);
     throw error;
   }
-}
+};
+
+/***********************************************
+ * Get quantities on hand by class
+ ***********************************************/
+reportsModel.getOnHand = async (control_class) => {
+  try {
+    const sql = `
+      SELECT * FROM current_inventory
+      WHERE current_inventory.control_class = control_class
+    `;
+
+    const reportResults = await db.query(sql, [control_class]);
+
+    return reportResults;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
 /***********************************************
  * Get medications by ID for "Medication Comparison" report
@@ -213,4 +232,3 @@ reportsModel.getMedicationsByIds = async (medicationIds) => {
 };
 
 module.exports = reportsModel;
-
